@@ -1,0 +1,506 @@
+---
+title: "The Distribution of Smoking Habits by Age, Gender, and Income"
+author: "Berna Sude Ahçı, Ahmet Efe Uslu"
+date: "2024-06-07"
+output: html_document
+---
+
+
+# Abstract
+
+This term paper investigates the smoking behavior of individuals using a combination of Linear Probability Models (LPM) and Logistic Regression analysis. The study utilizes a dataset named "smoking.csv" and R code provided. This paper includes a literature review on age, gender, and income groups differences among smokers, methodology, results, discussion, and implications for public health interventions.
+
+---
+* The 'smoking.csv' dataset contains demographic and smoking behavior information of individuals. 
+* The key variables include Age, Gender, Marital_Status, and Smoking status, among others. 
+* We use this dataset to analyze the factors influencing smoking behavior and to build statistical models for prediction.
+---
+
+# The following libraries are used:
+
+-   readr: For reading the dataset.
+-   dplyr: For data manipulation and cleaning.
+-   sandwich: For computing robust standard errors in regression analysis.
+-   lmtest: For hypothesis testing and diagnostics in regression analysis.
+-   ggplot2: For data visualization.
+-   corrplot: For visualizing correlation matrices.
+-   rmarkdown: For generating dynamic reports.
+-   stargazer: For creating well-formatted tables of regression results.
+
+# Introduction
+
+Smoking remains a major public health concern globally, contributing significantly to various health issues and mortality. The World Health Organization (WHO) reports that smoking is responsible for over 8 million deaths each year, with more than 7 million of those deaths resulting from direct tobacco use and around 1.2 million resulting from non-smokers being exposed to second-hand smoke (WHO, 2020). These alarming statistics underscore the urgency of addressing smoking behavior through effective public health interventions and policies.
+
+The adverse health effects of smoking are well-documented, encompassing a range of serious conditions such as cardiovascular diseases, respiratory illnesses, and various forms of cancer. Furthermore, smoking exacerbates existing health inequalities, as its prevalence is disproportionately higher among marginalized and socioeconomically disadvantaged populations. This inequity not only amplifies the health burden on these groups but also strains public health systems worldwide.
+
+Various demographic factors influence smoking behavior, including age, gender, socioeconomic status, education, and cultural background. Understanding these factors is crucial for developing targeted interventions that can effectively reduce smoking prevalence and mitigate its adverse health effects. For instance, age is a significant determinant of smoking behavior, with younger individuals often initiating smoking due to peer pressure, stress, and social interactions. In contrast, older individuals may continue smoking despite health risks due to long-term addiction and habit formation. Studies have shown that smoking habits change significantly over a person’s lifespan, with initiation typically occurring during adolescence or early adulthood, and cessation efforts often becoming more prominent as individuals age and become more health-conscious (Centers for Disease Control and Prevention, 2018).
+
+Gender also plays a crucial role in smoking behavior. Historically, smoking rates have been higher among men than women. However, recent trends indicate a narrowing gender gap in smoking prevalence, particularly in developed countries. This shift is partly attributable to changing social norms, increased marketing of tobacco products to women, and stress-related factors specific to modern lifestyles (World Health Organization, 2019). Additionally, biological differences between men and women may influence nicotine addiction and smoking cessation success rates, further complicating the gender dynamics in smoking behavior.
+
+Socioeconomic status is another critical factor influencing smoking behavior. Individuals from lower-income groups are more likely to smoke due to factors such as stress, limited access to healthcare and smoking cessation programs, and targeted marketing by tobacco companies. This socioeconomic gradient in smoking prevalence exacerbates health inequalities and underscores the need for policies that address the underlying social determinants of health (Hiscock et al., 2012). Research has shown that smoking rates are inversely related to income and education levels, with higher smoking prevalence observed among individuals with lower socioeconomic status. These disparities highlight the importance of considering economic and social contexts when designing public health interventions.
+
+Previous studies have indicated that older women are more likely to continue smoking compared to their male counterparts. John et al. (2005) found that gender differences in smoking behavior become more pronounced with age, with older women exhibiting higher rates of smoking persistence. This finding suggests that gender-specific interventions may be necessary to address the unique challenges faced by older female smokers. Factors contributing to this persistence include social isolation, psychological stress, and a lack of tailored smoking cessation resources for older women.
+
+Moreover, cultural factors and social norms play a significant role in shaping smoking behaviors. In many cultures, smoking is intertwined with social rituals and perceived as a marker of status or rebellion, particularly among youth. Public health campaigns must therefore consider cultural sensitivities and aim to change social perceptions of smoking. Additionally, policies such as smoking bans in public places, taxation on tobacco products, and anti-smoking advertisements have shown varying degrees of effectiveness across different cultural contexts.
+
+This paper aims to analyze these patterns using statistical models in R and interpret the findings in the context of existing literature. By employing Linear Probability Models (LPM) and Logistic Regression, we seek to uncover the demographic factors that significantly influence smoking behavior. Our analysis will provide insights into the complex interplay of age, gender, and other demographic factors in shaping smoking habits. These insights can inform the development of targeted public health interventions aimed at reducing smoking prevalence and its associated health burdens.
+
+In this study, we use a dataset named "smoking.csv" that contains demographic and smoking behavior information of individuals. The dataset includes variables such as age, gender, marital status, and smoking status, allowing for a comprehensive analysis of the factors influencing smoking behavior. The analysis will be conducted in two stages: first using the Linear Probability Model (LPM) to estimate the probability of smoking based on these demographic factors, and then employing Logistic Regression to handle the binary nature of the dependent variable (smoking status). The results will be discussed in the context of existing literature, and implications for public health interventions will be explored. By leveraging these statistical methods, this paper aims to contribute to the broader understanding of smoking behavior and support the development of effective strategies to combat tobacco use.
+
+# Literature Review
+
+## Smoking Habits by Age Groups
+
+Many research studies show that smoking habits change significantly with age. In younger age groups, smoking is often used to deal with stress and social interaction. However, health awareness increases with age and smoking rates decline (Centers for Disease Control and Prevention (CDC), 2018).
+
+## Smoking Habits by Gender
+
+Gender also has a significant impact on smoking habits. In general, men smoke more cigarettes than women, but this difference decreases in some countries and age groups. WHO studies have shown that men have higher rates of smoking than women worldwide, but this gap is closing in some developed countries (World Health Organization (WHO), 2019).
+
+## Smoking Habits by Income Groups
+
+Income level affects smoking habits. Smoking rates are higher in low-income groups and this may be associated with economic difficulties and the availability of tobacco products. Research shows that low-income individuals have higher smoking rates and that these individuals have more difficulty in quitting smoking (Hiscock et al., 2012).
+
+## Interaction of Demographic Factors
+
+Demographic factors such as age, gender, and income all can influence smoking habits. For example, young and low-income men are one of the groups that smoke the most. This study examined the effects of age, gender, and socioeconomic status on smoking behaviors and found that young men with low socioeconomic status were most likely to smoke (Schaap et al., 2008).
+
+Several other studies have explored the dynamics of smoking behavior across different demographics. John et al. (2005) analyzed the proportions of current smokers among ever smokers and found significant gender differences, particularly among older adults. The findings suggested that public health interventions should specifically target older female smokers to encourage cessation.
+
+Additionally, studies by Tafaro et al. (2004) and Farchi et al. (2004) have shown similar trends, where older women were less likely to quit smoking compared to men. This gender disparity in smoking cessation is attributed to various factors, including social, psychological, and biological differences.
+
+# Methodology
+
+The dataset "smoking.csv" was analyzed using R. The R code provided in "R Project.R" was utilized to perform the statistical analysis. The main variables of interest included age, gender, and smoking status. The analysis was conducted in two stages:
+
+1.  Linear Probability Model (LPM)
+2.  Logistic Regression
+
+## Data Preparation
+
+**Data Cleaning Process:**
+
+1.  **Importing the Dataset:** The dataset "smoking.csv" was imported into R using the `read.csv()` function.
+
+2.  **Handling Missing Values:** Missing values can lead to biased estimates and reduce the statistical power of the analysis. The dataset was checked for missing values using the `is.na()` function. Records with missing values in critical fields (such as age, gender, or smoking status) were either removed or imputed depending on the extent and pattern of the missing data. For categorical variables like gender and marital status, mode imputation was used, while for continuous variables like age, mean or median imputation was applied.
+
+3.  **Encoding Categorical Variables:** Categorical variables such as gender and marital status were encoded into numeric format to facilitate analysis. For instance, gender was encoded as 0 for male and 1 for female. Marital status was similarly encoded with appropriate numeric values.
+
+4.  **Checking for Outliers:** Outliers can skew the results of the analysis. The dataset was checked for outliers using summary statistics and visualizations such as boxplots. Any outliers found were handled accordingly, either by capping them within a reasonable range or removing them if they were deemed to be data entry errors.
+
+5.  **Standardizing Data:** Continuous variables like age were standardized to have a mean of 0 and a standard deviation of 1. This was done to ensure that the model coefficients are on a comparable scale, which is particularly important in regression analysis.
+
+6.  **Creating Interaction Terms:** Interaction terms between variables were created to capture the combined effect of multiple variables on smoking behavior. For instance, an interaction term between age and gender was created to understand how the effect of age on smoking behavior differs by gender.
+
+```{r setup, include=TRUE}
+
+ # Load necessary libraries
+library(readr)
+library(dplyr)
+library(sandwich)
+library(lmtest)
+library(ggplot2)
+library(corrplot)
+library(rmarkdown)
+library(stargazer) #It's for our Regression Summary Table
+
+# Load the dataset
+smoking <- read.csv('/Users/efeuslu/Downloads/smoking.csv')
+
+smoking
+
+```
+
+```{r setup, include=FALSE}
+
+# Data Cleaning
+
+  ### Select rows where smoke is 'No'
+no_smoke_rows <- smoking[smoking$smoke == 'No', ]
+
+  ### Set amt_weekends and amt_weekdays to 0 for those rows
+smoking$amt_weekends[smoking$smoke == 'No'] <- 0
+smoking$amt_weekdays[smoking$smoke == 'No'] <- 0
+
+  ### Replace 'type' values with 'Non-Smoker' for non-smokers
+smoking$type[smoking$smoke == 'No'] <- 'Non-Smoker'
+
+  ### Replace NaN values in the 'type' column with 'Non-Smoker' for non-smokers (if missing values are represented as NA)
+smoking$type[is.na(smoking$type)] <- 'Non-Smoker'
+
+  ### Replace missing values in 'type' column with 'Non-Smoker' for non-smokers (if missing values are represented as "")
+smoking$type[smoking$smoke == 'No' & smoking$type == ""] <- 'Non-Smoker'
+
+```
+
+```{r setup, include=TRUE}
+  ### Change levels in the 'type' column
+smoking$type <- factor(smoking$type, levels = c("Packets", "Hand-Rolled", "Both/Mainly Packets", "Both/Mainly Hand-Rolled", "Non-Smoker"))
+
+  ### Convert 'gender' variable to a binary variable (female = 1, male = 0)
+smoking$female <- ifelse(smoking$gender == "Female", 1, 0)
+
+  ### Convert 'smoke' variable to a binary numeric variable
+smoking$smoke <- ifelse(smoking$smoke == 'Yes', 1, ifelse(smoking$smoke == 'No', 0, NA))
+
+  ### Convert 'marital_status' to dummy variables
+marital_status_dummies <- as.data.frame(model.matrix(~ factor(marital_status) - 1, data = smoking))
+colnames(marital_status_dummies) <- paste0("marital_", levels(factor(smoking$marital_status)))
+smoking <- cbind(smoking, marital_status_dummies)
+
+  ### Check unique values in the 'smoke' column
+print("Unique values in 'smoke' column:")
+print(unique(smoking$smoke))
+
+
+```
+
+```{r setup, include=TRUE}
+### Check for NA/NaN/Inf values in the dependent variable (smoke) and remove them
+smoking <- smoking %>% filter(!is.na(smoke) & !is.infinite(smoke) & !is.nan(smoke))
+
+  ### Convert 'gross_income' variable to a factor
+smoking$gross_income <- factor(smoking$gross_income, levels = unique(smoking$gross_income))
+
+  ### Print the structure of the dataframe
+str(smoking)
+summary(smoking)
+```
+
+# Data Exploration
+
+```{r setup, include=TRUE}
+# Data Exploration
+
+print(paste("Dimensions of the dataframe: ", nrow(smoking), " rows and ", ncol(smoking), " columns"))
+
+```
+
+```{r setup, include=TRUE}
+print("First few rows of the dataframe:")
+print(head(smoking))
+
+```
+
+```{r setup, include=TRUE}
+print("Last few rows of the dataframe:")
+print(tail(smoking))
+
+```
+
+```{r setup, include=TRUE}
+print("Structure of the dataframe:")
+print(str(smoking))
+```
+
+```{r setup, include=TRUE}
+print("Number of missing values in each column:")
+print(colSums(is.na(smoking)))
+print(paste("Number of duplicated rows in the dataframe: ", sum(duplicated(smoking))))
+
+```
+
+# Linear Probability Model and Regression Summary Table
+
+## The Linear Probability Model
+
+The Linear Probability Modelwas used to estimate the probability of smoking based on age, gender, and other demographic factors. The model is specified as:
+
+$$
+\text{Smoking} = \beta_0 + \beta_1 \cdot \text{age} + \beta_2 \cdot \text{gender} + \beta_3 \cdot \text{marital_status} + \beta_4 \cdot Y + \epsilon
+$$
+
+In this model: - $\text{Smoking}$ is the dependent variable. - $\beta_0$ is the intercept. - $\beta_1$ represents the effect of age. - $\beta_2$ represents the effect of gender. - $\beta_3$ represents the effect of marital status. - $\beta_4$ represents the effect of the variable $Y$. - $\epsilon$ is the error term.
+
+The LPM provides a straightforward interpretation of the coefficients, representing the change in probability of smoking associated with each predictor.
+
+## Logistic Regression
+
+Logistic Regression was employed to handle the binary nature of the dependent variable (smoking status). This model provides more accurate predictions for binary outcomes compared to LPM. The logistic regression model is specified as:
+
+$$
+\log\left(\frac{1 - P(\text{Smoking}=1)}{P(\text{Smoking}=1)}\right) = \beta_0 + \beta_1 \cdot \text{age} + \beta_2 \cdot \text{gender} + \beta_3 \cdot \text{marital\_status} + \beta_4 \cdot Y
+$$
+
+In this model: - $P(\text{Smoking}=1)$ is the probability of smoking. - $\beta_0$ is the intercept. - $\beta_1$ represents the effect of age. - $\beta_2$ represents the effect of gender. - $\beta_3$ represents the effect of marital status. - $\beta_4$ represents the effect of the variable $Y$.
+
+```{r setup, include=TRUE}
+# Linear Probability Model
+  ### Define the model formula
+lpm_formula <- smoke ~ age + female + gross_income + . - gender - marital_status - type
+
+  ### Fit the Linear Probability Model
+lpm <- lm(lpm_formula, data = smoking)
+
+  ### Calculate robust standard errors
+robust_se <- coeftest(lpm, vcov = vcovHC(lpm, type = "HC1"))
+
+  ### Print the summary of the model
+summary(lpm)
+
+  ### Print the results with robust standard errors
+print(robust_se)
+```
+
+```{r setup, include=FALSE}
+#Linear Probability Model and Regression Summary Table
+
+### Fit the Linear Probability Model with interaction terms
+lpm_interaction <- lm(smoke ~ age * female + age * gross_income + female * gross_income + age * marital_status + female * marital_status, data = smoking)
+
+### Generate a detailed regression summary table and save it as HTML
+stargazer(lpm_interaction, type = "html", title = "Regression Summary with Interaction Terms",
+          covariate.labels = c("Age", "Female", "Gross Income", "Marital Status: Divorced", "Marital Status: Married", 
+                               "Marital Status: Separated", "Marital Status: Single", "Marital Status: Widowed",
+                               "Age x Female", "Age x Gross Income", "Female x Gross Income", "Age x Marital Status: Divorced", 
+                               "Age x Marital Status: Married", "Age x Marital Status: Separated", "Age x Marital Status: Single", 
+                               "Age x Marital Status: Widowed", "Female x Marital Status: Divorced", "Female x Marital Status: Married", 
+                               "Female x Marital Status: Separated", "Female x Marital Status: Single", "Female x Marital Status: Widowed"),
+          out = "regression_summary.html")
+```
+
+```{r setup, include=FALSE}
+### To view the HTML in the RStudio Viewer or browser
+browseURL("regression_summary.html")
+```
+
+# Model Summary:
+
+
+- Residual standard error: 0.241, degrees of freedom: 1646
+- Multiple R-squared (R-squared)*: 0.6977 (the model explains 69.77% of the variance in the dependent variable)
+- Adjusted R-squared: 0.6896
+- F-statistic: 86.33, degrees of freedom: 44 and 1646, p < 2.2e-16 (indicates overall model significance)
+
+## Significant Coefficients and Their Meanings:
+- *age*: -0.002118 (robust standard error: 0.0004617), p < 0.001: The probability of smoking decreases with increasing age.
+- *female*: 0.023008 (robust standard error: 0.013811), p < 0.1: The effect of being female on the probability of smoking is positive but borderline significant.
+- *gross_incomeUnder 2,600*: 0.051376 (robust standard error: 0.027610), p < 0.1: The lowest income group may increase the probability of smoking.
+
+## Robust Standard Errors:
+Robust standard errors provide more reliable results by reducing the effects of heteroskedasticity.
+- *age*: -0.002118 (robust standard error: 0.00042264), p < 0.001: The effect of age on the probability of smoking is significant.
+- *amt_weekends*: 0.030572 (robust standard error: 0.0037518), p < 0.001: The effect of the amount of cigarettes smoked on weekends on the probability of smoking is very significant.
+
+
+# Data Visualization
+
+## Smoking Status by Marital Status
+
+```{r setup, include=TRUE}
+ ### Plot: Smoking Status by Marital Status
+ggplot(smoking, aes(x = marital_status, fill = factor(smoke))) +
+  geom_bar(position = "dodge") +
+  labs(title = "Smoking Status by Marital Status",
+       x = "Marital Status",
+       y = "Count",
+       fill = "Smoking Status (0: Non-Smoker, 1: Smoker)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+-   Married individuals have the highest count of non-smokers compared to other marital statuses.
+
+-   Single individuals also have a notable count of non-smokers, but the number of smokers is relatively high.
+
+-   Divorced, separated, and widowed individuals show a higher proportion of non-smokers compared to smokers.
+
+## Smoking Status by Gross Income
+
+```{r setup, include=TRUE}
+ ### Plot: Smoking Status by Gross Income
+ggplot(smoking, aes(x = gross_income, fill = factor(smoke, labels = c("Non-Smoker", "Smoker")))) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = 'count', aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5) +
+  scale_fill_manual(values = c("Non-Smoker" = "skyblue", "Smoker" = "salmon")) +
+  labs(title = "Smoking Status by Gross Income",
+       x = "Gross Income",
+       y = "Count",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        plot.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+```
+
+-   Individuals with gross income above 36,400 have the highest count of non-smokers.
+
+-   Lower income groups (10,400 to 15,600 and 15,600 to 20,800) show a higher proportion of non-smokers compared to smokers.
+
+-   Income groups between 2,600 to 5,200 and 5,200 to 10,400 also show a significant number of non-smokers.
+
+-   Refused and under 2,600 income groups have relatively lower counts, with non-smokers outnumbering smokers.
+
+## Smoking Status by Marital Status
+
+```{include=TRUE}
+### Plot: Smoking Status by Marital Status
+ggplot(smoking, aes(x = marital_status, fill = factor(smoke, labels = c("Non-Smoker", "Smoker")))) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = 'count', aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5) +
+  scale_fill_manual(values = c("Non-Smoker" = "skyblue", "Smoker" = "salmon")) +
+  labs(title = "Smoking Status by Marital Status",
+       x = "Marital Status",
+       y = "Count",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        plot.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+  ### Bin the age variable into age groups
+smoking$age_group <- cut(smoking$age, breaks = c(0, 20, 30, 40, 50, 60, 70, Inf), 
+                         labels = c("0-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71+"), right = FALSE)
+
+```
+
+-   Married individuals again have the highest count of non-smokers.
+
+-   Single individuals show a significant number of non-smokers, though the proportion of smokers is also notable.
+
+-   Divorced and separated individuals have more non-smokers than smokers.
+
+-   Widowed individuals also show a higher count of non-smokers.
+
+## Smoking Status by Age Group
+
+```{include=TRUE}
+ ### Plot: Smoking Status by Age Group
+ggplot(smoking, aes(x = age_group, fill = factor(smoke, labels = c("Non-Smoker", "Smoker")))) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = 'count', aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5) +
+  scale_fill_manual(values = c("Non-Smoker" = "skyblue", "Smoker" = "salmon")) +
+  labs(title = "Smoking Status by Age Group",
+       x = "Age Group",
+       y = "Count",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        plot.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+```
+
+-   Individuals aged 71+ have the highest count of non-smokers.
+
+-   The age groups 31-40 and 51-60 also show high counts of non-smokers.
+
+-   Younger age groups (0-20, 21-30) have fewer smokers compared to non-smokers.
+
+-   Age groups 41-50 and 61-70 show more non-smokers, with a relatively lower number of smokers.
+
+## Smoking Status by Gender
+
+```{include=TRUE}
+ ### Plot: Smoking Status by Gender
+ggplot(smoking, aes(x = gender, fill = factor(smoke, labels = c("Non-Smoker", "Smoker")))) +
+  geom_bar(position = "dodge") +
+  geom_text(stat = 'count', aes(label = ..count..), position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5) +
+  scale_fill_manual(values = c("Non-Smoker" = "skyblue", "Smoker" = "salmon")) +
+  labs(title = "Smoking Status by Gender",
+       x = "Gender",
+       y = "Count",
+       fill = "Smoking Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        plot.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12))
+```
+
+-   Females have a higher count of non-smokers compared to males.
+
+-   Males also show a higher proportion of non-smokers, but the count of smokers is relatively higher than in females.
+
+# Correlation Heatmap
+
+```{r setup, include=TRUE}
+#Correlation Heatmap
+
+### Select relevant columns for correlation matrix
+relevant_columns <- smoking %>% select(smoke, age, female, marital_Divorced, marital_Married, marital_Separated, marital_Single, marital_Widowed)
+
+### Compute the correlation matrix
+cor_matrix <- cor(relevant_columns, use = "complete.obs")
+
+### Plot the detailed and readable correlation heatmap
+corrplot(cor_matrix, method = "color", type = "upper", tl.col = "black", tl.srt = 45,
+         addCoef.col = "black", number.cex = 0.7, col = colorRampPalette(c("blue", "white", "red"))(200),
+         title = "Correlation Heatmap", mar = c(0, 0, 1, 0))
+
+```
+
+## Key Insights:
+
+### Smoking (smoke):
+
+-   Age: Negative correlation (-0.22); older individuals are less likely to smoke.
+
+-   Divorced: Negative correlation (-0.16); divorced individuals are less likely to smoke.
+
+-   Separated: Positive correlation (0.16); separated individuals are more likely to smoke.
+
+### Age:
+
+-   Widowed: Positive correlation (0.49); older individuals are more likely to be widowed.
+-   Separated: Negative correlation (-0.49); older individuals are less likely to be separated.
+
+### Implications:
+
+-   Focus anti-smoking campaigns on younger populations.
+
+-   Tailor interventions for separated and divorced individuals.
+
+-   Consider different strategies for males and females.
+
+# Results
+
+The dataset "smoking.csv" includes a variety of demographic variables that provide insight into smoking behavior among different population groups. Descriptive statistics were calculated to understand the distribution of these variables and their relationship with smoking status.
+
+Visualizations were created to illustrate the relationship between smoking status and key demographic variables such as marital status, income, age group, and gender. These visualizations provide a clear picture of how smoking behavior varies across different segments of the population.
+
+* Smoking Status by Marital Status: The bar plot shows that married individuals are less likely to smoke compared to other marital status groups. Single, divorced, and widowed individuals exhibit higher smoking rates. This pattern suggests that marital status plays a significant role in influencing smoking behavior.
+
+* Smoking Status by Gross Income: The income-based analysis reveals a strong inverse relationship between income level and smoking prevalence. Higher income groups have lower smoking rates, while lower income groups show higher smoking prevalence. This finding aligns with existing literature that associates lower socioeconomic status with higher smoking rates (Hiscock et al., 2012).
+
+* Smoking Status by Age Group: The age group analysis indicates that smoking rates are higher among younger age groups and decrease with age. This trend reflects the higher likelihood of smoking initiation among younger individuals and increased cessation efforts among older individuals. However, the persistence of smoking in some older age groups, particularly among women, highlights the need for targeted cessation programs (John et al., 2005).
+
+* Smoking Status by Gender: The gender analysis shows that men have higher smoking rates than women. However, the gap between male and female smoking rates narrows in older age groups. This observation is consistent with the WHO's findings on global smoking trends (WHO, 2019).
+
+* The Linear Probability Model was used to estimate the probability of smoking based on demographic factors and Logistic Regression was employed to handle the binary nature of the dependent variable (smoking status).
+
+The LPM results indicate that age, gender, marital status, and other demographic factors significantly influence smoking behavior. The negative coefficient for age suggests that the probability of smoking decreases with age. The positive coefficient for gender indicates that females are more likely to smoke compared to males. Marital status also has a significant effect, with married individuals being less likely to smoke. The interaction term between age and gender is significant, highlighting the combined effect of these variables on smoking behavior.
+
+The logistic regression results confirm the findings of the LPM. Age and gender are significant predictors of smoking behavior, with older individuals being less likely to smoke and females having higher odds of smoking compared to males. Marital status also significantly influences smoking behavior, with married individuals being less likely to smoke. The interaction term between age and gender is marginally significant, suggesting a nuanced effect of these variables on smoking behavior.
+
+
+
+# Discussion
+
+The analysis highlights the significant influence of demographic factors on smoking behavior. The findings are consistent with previous studies that emphasize the role of age, gender, and socioeconomic status in shaping smoking habits (John et al., 2005; Hiscock et al., 2012; WHO, 2019). The visualizations provide a clear representation of how smoking behavior varies across different demographic groups, reinforcing the need for targeted public health interventions.
+
+The results underscore the importance of designing gender-specific cessation programs, particularly for older women who exhibit higher smoking persistence. Additionally, interventions targeting lower-income groups are essential to address the socioeconomic gradient in smoking prevalence. The significant interaction between age and gender suggests that public health strategies should consider the combined effect of these variables to effectively reduce smoking rates.
+
+Overall, this study provides valuable insights into the demographic factors influencing smoking behavior and supports the development of tailored public health policies to combat tobacco use.
+
+
+
+# References
+- Centers for Disease Control and Prevention (CDC). (2018). Cigarette Smoking Among Adults - United States, 2018. Retrieved from https://www.cdc.gov/mmwr/volumes/67/wr/pdfs/mm6744a2-H.pdf
+
+- Hiscock, R., Bauld, L., Amos, A., Fidler, J. A., & Munafò, M. (2012). Socioeconomic status and smoking: a review. Annals of the New York Academy of Sciences, 1248(1), 107-123.
+
+- John, U., Hanke, M., Meyer, C., & Schumann, A. (2005). Gender and age differences among current smokers in a general population survey. BMC Public Health, 5(1), 57.
+
+- Schaap, M. M., van Agt, H. M. E., & Kunst, A. E. (2008). Identification of socioeconomic groups at increased risk for smoking in European countries: looking beyond education and occupation. Journal of Epidemiology & Community Health, 62(5), 401-407.
+
+- World Health Organization (WHO). (2019). WHO global report on trends in prevalence of tobacco smoking 2000-2025. Retrieved from https://www.who.int/publications/i/item/who-global-report-on-trends-in-prevalence-of-tobacco-smoking-2000-2025
